@@ -17,12 +17,12 @@ SUBLEVEL=$(echo $KERNEL | cut -d. -f3 | cut -d- -f1)
 
 KERNELVER=$(($VERSION*100000+1000*$PATCHLEVEL+$SUBLEVEL));
 
-if [ $KERNELVER -le 409040 ]; then 
+if [ $KERNELVER -le 409040 ]; then  #**
  echo "$ERR WARNING: kernel version not supported. >4.9.40 required $NC" 1>&2
  exit 0
 fi
 
-if (cat /etc/issue | grep -v Raspbian) then
+if (cat /etc/issue | grep -v Raspbian) then #**
     echo -e "$ERR ERROR: This script is only compatible with Raspbian Linux. $NC" 1>&2
     exit 1
 fi
@@ -37,7 +37,11 @@ else
     exit 0
 fi
 
-sed -i '1 s/^/overlay=yes /' /boot/cmdline.txt 
+if (cat /boot/cmdline.txt | grep "overlay=") then
+    sed -i '1 s/overlay=...? /overlay=yes/' /boot/cmdline.txt
+else
+    sed -i '1 s/^/overlay=yes /' /boot/cmdline.txt
+fi
 
 wget -nv https://raw.githubusercontent.com/janztec/empc-arpi-linux-readonly/master/hooks_overlay -O /etc/initramfs-tools/hooks/overlay
 wget -nv https://raw.githubusercontent.com/janztec/empc-arpi-linux-readonly/master/init-bottom_overlay -O /etc/initramfs-tools/scripts/init-bottom/overlay
