@@ -58,7 +58,7 @@ if [ $QUIETFLAG -ne 0 ]; then
     fi
 fi
 
-if (grep "overlay=" /etc/issue) then
+if (grep "overlay=" /boot/cmdline.txt) then
     sed -i "1 s/overlay=...? /overlay=$OVERLAY /" /boot/cmdline.txt
 else
     sed -i "1 s/^/overlay=$OVERLAY /" /boot/cmdline.txt
